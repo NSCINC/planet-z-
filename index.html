@@ -62,6 +62,17 @@
         textarea:focus {
             border-color: #FFFF00; /* Amarelo */
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #FFFF00; /* Amarelo */
+            background-color: #333; /* Preto mais claro */
+            color: #FFFF00; /* Amarelo */
+            font-size: 1em;
+            outline: none;
+        }
         button {
             background-color: #000; /* Preto */
             color: #FFFF00; /* Amarelo */
@@ -98,6 +109,12 @@
             font-size: 0.9em;
             margin-top: 10px;
         }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #FFFF00; /* Amarelo */
+            text-align: center;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -119,18 +136,28 @@
     <div class="container">
         <img src="logo.jpg" alt="Logo" class="logo">
         <h1>🌌🚀 LUA LIVE LIBRARY  🚀🌌</h1>
-        <textarea id="inputCode" placeholder='// Insira o código Solidity aqui'></textarea>
-        <button onclick="convertSolidityToLua()">Converter</button>
+        <select id="languageSelector">
+            <option value="solidity">Solidity</option>
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="ruby">Ruby</option>
+        </select>
+        <textarea id="inputCode" placeholder='// Insira o código aqui'></textarea>
+        <button onclick="convertCode()">Converter</button>
         <div class="output" id="outputCode"></div>
         <div class="error-message" id="errorMessage"></div>
+        <div class="footer">
+            Direitos reservados a NSC INC
+        </div>
     </div>
 
     <script>
-        async function convertSolidityToLua() {
+        async function convertCode() {
             const inputCode = document.getElementById('inputCode').value;
+            const selectedLanguage = document.getElementById('languageSelector').value;
 
             if (!inputCode.trim()) {
-                displayErrorMessage('Por favor, insira o código Solidity antes de converter.');
+                displayErrorMessage('Por favor, insira o código antes de converter.');
                 return;
             }
 
@@ -139,7 +166,7 @@
             button.disabled = true;
 
             try {
-                const convertedCode = await convertWithLua(inputCode);
+                const convertedCode = await convertToLua(selectedLanguage, inputCode);
                 document.getElementById('outputCode').innerHTML = convertedCode;
                 clearErrorMessage();
             } catch (error) {
@@ -151,20 +178,26 @@
             }
         }
 
-        async function convertWithLua(code) {
+        async function convertToLua(language, code) {
             return new Promise((resolve) => {
                 setTimeout(() => {
-                    let luaCode = code
-                        .replace(/pragma solidity \^\d+\.\d+\.\d+;/g, '-- Versão Solidity')
-                        .replace(/contract (\w+)/g, 'function $1()')
-                        .replace(/{/g, 'do')
-                        .replace(/}/g, 'end')
-                        .replace(/uint/g, 'number')
-                        .replace(/string/g, 'string')
-                        .replace(/public/g, '-- public')
-                        .replace(/function/g, 'local function')
-                        .replace(/returns \((.*)\)/g, '-- returns $1')
-                        .replace(/;/g, '');
+                    let luaCode;
+                    switch (language) {
+                        case 'solidity':
+                            luaCode = convertSolidityToLua(code);
+                            break;
+                        case 'javascript':
+                            luaCode = convertJavaScriptToLua(code);
+                            break;
+                        case 'python':
+                            luaCode = convertPythonToLua(code);
+                            break;
+                        case 'ruby':
+                            luaCode = convertRubyToLua(code);
+                            break;
+                        default:
+                            luaCode = '-- Linguagem não suportada';
+                    }
 
                     // Implementar processamento SEA Learning
                     luaCode = seaLearningProcessing(luaCode);
@@ -172,6 +205,55 @@
                     resolve(luaCode);
                 }, 1000);
             });
+        }
+
+        function convertSolidityToLua(code) {
+            return code
+                .replace(/pragma solidity \^\d+\.\d+\.\d+;/g, '-- Versão Solidity')
+                .replace(/contract (\w+)/g, 'function $1()')
+                .replace(/{/g, 'do')
+                .replace(/}/g, 'end')
+                .replace(/uint/g, 'number')
+                .replace(/string/g, 'string')
+                .replace(/public/g, '-- public')
+                .replace(/function/g, 'local function')
+                .replace(/returns \((.*)\)/g, '-- returns $1')
+                .replace(/;/g, '');
+        }
+
+        function convertJavaScriptToLua(code) {
+            return code
+                .replace(/function/g, 'local function')
+                .replace(/var /g, 'local ')
+                .replace(/let /g, 'local ')
+                .replace(/const /g, 'local ')
+                .replace(/console\.log/g, 'print')
+                .replace(/{/g, 'do')
+                .replace(/}/g, 'end')
+                .replace(/;/g, '');
+        }
+
+        function convertPythonToLua(code) {
+            return code
+                .replace(/def /g, 'local function ')
+                .replace(/:/g, ' do')
+                .replace(/return/g, 'return')
+                .replace(/None/g, 'nil')
+                .replace(/True/g, 'true')
+                .replace(/False/g, 'false')
+                .replace(/# /g, '-- ');
+        }
+
+        function convertRubyToLua(code) {
+            return code
+                .replace(/def /g, 'local function ')
+                .replace(/end/g, 'end')
+                .replace(/puts /g, 'print ')
+                .replace(/:/g, ' do')
+                .replace(/nil/g, 'nil')
+                .replace(/true/g, 'true')
+                .replace(/false/g, 'false')
+                .replace(/# /g, '-- ');
         }
 
         function seaLearningProcessing(code) {
