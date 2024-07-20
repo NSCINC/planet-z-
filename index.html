@@ -1,6 +1,3 @@
-Claro! Vou alterar as cores do estilo para preto e amarelo.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,7 +79,8 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
             color: #000; /* Preto */
         }
         button:active {
-            background-color: #B22222; /* Vermelho mais escuro */
+            background-color: #333; /* Preto mais claro */
+            color: #FFFF00; /* Amarelo */
         }
         .output {
             background: #333; /* Preto mais claro */
@@ -121,8 +119,8 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
     <div class="container">
         <img src="logo.jpg" alt="Logo" class="logo">
         <h1>🌌🚀 Planet Z 🚀🌌</h1>
-        <textarea id="inputCode" placeholder='// Insert Solidity code here'></textarea>
-        <button onclick="convertSolidityToLua()">Convert</button>
+        <textarea id="inputCode" placeholder='// Insira o código Solidity aqui'></textarea>
+        <button onclick="convertSolidityToLua()">Converter</button>
         <div class="output" id="outputCode"></div>
         <div class="error-message" id="errorMessage"></div>
     </div>
@@ -132,12 +130,12 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
             const inputCode = document.getElementById('inputCode').value;
 
             if (!inputCode.trim()) {
-                displayErrorMessage('Please enter Solidity code before converting.');
+                displayErrorMessage('Por favor, insira o código Solidity antes de converter.');
                 return;
             }
 
             const button = document.querySelector('button');
-            button.textContent = 'Converting...';
+            button.textContent = 'Convertendo...';
             button.disabled = true;
 
             try {
@@ -145,10 +143,10 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
                 document.getElementById('outputCode').innerHTML = convertedCode;
                 clearErrorMessage();
             } catch (error) {
-                console.error('Error converting the code:', error);
-                displayErrorMessage('An error occurred while processing the code.');
+                console.error('Erro ao converter o código:', error);
+                displayErrorMessage('Ocorreu um erro ao processar o código.');
             } finally {
-                button.textContent = 'Convert';
+                button.textContent = 'Converter';
                 button.disabled = false;
             }
         }
@@ -157,7 +155,7 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
             return new Promise((resolve) => {
                 setTimeout(() => {
                     let luaCode = code
-                        .replace(/pragma solidity \^\d+\.\d+\.\d+;/g, '-- Solidity version')
+                        .replace(/pragma solidity \^\d+\.\d+\.\d+;/g, '-- Versão Solidity')
                         .replace(/contract (\w+)/g, 'function $1()')
                         .replace(/{/g, 'do')
                         .replace(/}/g, 'end')
@@ -168,7 +166,7 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
                         .replace(/returns \((.*)\)/g, '-- returns $1')
                         .replace(/;/g, '');
 
-                    // Implement SEA Learning processing
+                    // Implementar processamento SEA Learning
                     luaCode = seaLearningProcessing(luaCode);
 
                     resolve(luaCode);
@@ -177,8 +175,8 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
         }
 
         function seaLearningProcessing(code) {
-            // Implement SEA Learning processing logic here
-            // Example: Adding comments to the code
+            // Implementar lógica de processamento SEA Learning aqui
+            // Exemplo: Adicionar comentários ao código
             code = code.replace(/local function (\w+)/g, '-- SEA Learning: Function $1\nlocal function $1');
             return code;
         }
@@ -193,4 +191,3 @@ Claro! Vou alterar as cores do estilo para preto e amarelo.
     </script>
 </body>
 </html>
-```
